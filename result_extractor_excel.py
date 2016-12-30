@@ -1,4 +1,3 @@
-import sys
 import os
 import fnmatch
 import openpyxl
@@ -18,7 +17,6 @@ def save_test_result_to_excel_file():
             tc_name_list.append(tc_name_attrib)
             tc_status_list.append(get_test_status_path(root, tc_name_attrib)[0].attrib['status'])
             tc_error_list.append(get_test_status_path(root, tc_name_attrib)[0].text)
-    range_length = len(tc_name_list)
 
     date_stamp = '{:%Y-%m-%d-%H%M%S}'.format(datetime.datetime.now())
     result_file = 'test_result-' + date_stamp + '.xlsx'
@@ -26,12 +24,11 @@ def save_test_result_to_excel_file():
     created_sheet = wb.create_sheet()
     created_sheet['A1'] = 'Test Case Name'
     created_sheet['B1'] = 'Test Case Status'
-    created_sheet['C1'] = 'Test Case Error List'
-
-    for i in range(1, int(range_length) + 1):
-        created_sheet['A' + str(i + 1)] = tc_name_list[i - 1]
-        created_sheet['B' + str(i + 1)] = tc_status_list[i - 1]
-        created_sheet['C' + str(i + 1)] = tc_error_list[i - 1]
+    created_sheet['C1'] = 'Test Case Error'
+    for i, (name, status, error) in enumerate(zip(tc_name_list, tc_status_list, tc_error_list)):
+        created_sheet['A' + str(i + 2)] = name
+        created_sheet['B' + str(i + 2)] = status
+        created_sheet['C' + str(i + 2)] = error
     wb.save(filename=result_file)
 
 def get_test_status_path(root, tc_name_attrib):
@@ -46,17 +43,6 @@ def parse_xml_file(xml_file):
     return tree.getroot()
 
 def get_all_xml_files():
-    return traverse_thru_folders()
-
-def retrieve_from_current_folder():
-    xml_files = []
-    files_in_dir = listdir(getcwd())
-    for file_item in files_in_dir:
-        if file_item.endswith(".xml"):
-            xml_files.append(file_item)
-    return xml_files
-
-def traverse_thru_folders():
     xml_files = []
     for root, dirnames, filenames in os.walk('.'):
         for filename in fnmatch.filter(filenames, '*.xml'):
