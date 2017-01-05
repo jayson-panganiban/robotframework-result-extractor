@@ -21,7 +21,6 @@ def save_test_result_to_text_file():
     with open(test_file_result, "a") as output_file:
         for name, status, error in zip(tc_name_list, tc_status_list, tc_error_list):
             output_file.write(name + "\t" + status + "\t" + error.encode('utf-8') + "\n")
-    output_file.close()
 
 def get_test_status_path(root, tc_name_attrib):
     if "'" in tc_name_attrib:
