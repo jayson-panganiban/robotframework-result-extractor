@@ -7,7 +7,6 @@ from openpyxl import Workbook
 from itertools import izip, count
 
 def save_test_result_to_excel_file():
-
     tc_name_list = []
     tc_status_list = []
     tc_error_list = []
@@ -31,10 +30,10 @@ def save_test_result_to_excel_file():
     result_file = 'test_result-' + date_stamp + '.xlsx'
     wb = Workbook()
     worksheet = wb.worksheets[0]
-    worksheet['A1'] = 'Test Case Name'
-    worksheet['B1'] = 'Test Case Status'
-    worksheet['C1'] = 'Test Case Error'
-    worksheet['D1'] = 'Test Case Tags'
+    worksheet['A1'] = 'Test Case'
+    worksheet['B1'] = 'Status'
+    worksheet['C1'] = 'Error Detaiils'
+    worksheet['D1'] = 'Tags'
     for i, name, status, error, tags in izip(count(), tc_name_list, tc_status_list, tc_error_list, tc_tag_list):
         worksheet['A' + str(i + 2)] = name
         worksheet['B' + str(i + 2)] = status
