@@ -21,9 +21,9 @@ def save_test_result_to_excel_file():
                 tc_status_list.append(get_test_status_path(elem, tc_name_attrib)[0].attrib['status'])
                 tc_error_list.append(get_test_status_path(elem, tc_name_attrib)[0].text)
                 tc_tag_list.append(', '.join(get_test_tags(elem, tc_name_attrib)))
-        elem.clear()
-        while elem.getprevious() is not None:
-            del elem.getparent()[0]
+                elem.clear()
+                while elem.getprevious() is not None:
+                    del elem.getparent()[0]
         del context
 
     date_stamp = '{:%Y-%m-%d-%H%M%S}'.format(datetime.datetime.now())
