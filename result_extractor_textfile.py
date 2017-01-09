@@ -18,16 +18,16 @@ def save_test_result_to_text_file():
                 tc_status_list.append(get_test_status_path(elem, tc_name_attrib)[0].attrib['status'])
                 tc_error_list.append(get_test_status_path(elem, tc_name_attrib)[0].text)
                 tc_tag_list.append(', '.join(get_test_tags(elem, tc_name_attrib)))
-        elem.clear()
-        while elem.getprevious() is not None:
-            del elem.getparent()[0]
+                elem.clear()
+                while elem.getprevious() is not None:
+                    del elem.getparent()[0]
         del context
 
     date_stamp = '{:%Y-%m-%d-%H%M%S}'.format(datetime.datetime.now())
     test_file_result = "test_result.txt" + "-" + str(date_stamp) + ".txt"
     with open(test_file_result, "a") as output_file:
-        for name, status, error in zip(tc_name_list, tc_status_list, tc_error_list):
-            output_file.write(name + "\t" + status + "\t" + str(error) + "\n")
+        for name, status, error, tags in zip(tc_name_list, tc_status_list, tc_error_list, tc_tag_list):
+            output_file.write(name + "\t" + status + "\t" + str(error) + "\t" + tags + "\n")
 
 def get_test_status_path(elem, tc_name_attrib):
     if "'" in tc_name_attrib:
@@ -49,7 +49,6 @@ def get_all_xml_files():
         for filename in fnmatch.filter(filenames, '*.xml'):
             xml_files.append(os.path.join(root, filename))
     return xml_files
-
 
 if __name__ == '__main__':
     save_test_result_to_text_file()
