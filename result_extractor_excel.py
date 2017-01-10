@@ -1,6 +1,5 @@
 import os
 import fnmatch
-import openpyxl
 import datetime
 from lxml import etree
 from openpyxl import Workbook
@@ -20,7 +19,7 @@ def save_test_result_to_excel_file():
                 tc_name_list.append(tc_name_attrib)
                 tc_status_list.append(get_test_status_path(elem, tc_name_attrib)[0].attrib['status'])
                 tc_error_list.append(get_test_status_path(elem, tc_name_attrib)[0].text)
-                tc_tag_list.append(', '.join(get_test_tags(elem, tc_name_attrib)))
+                tc_tag_list.append(get_test_tags(elem, tc_name_attrib))
                 elem.clear()
                 while elem.getprevious() is not None:
                     del elem.getparent()[0]
@@ -29,16 +28,18 @@ def save_test_result_to_excel_file():
     date_stamp = '{:%Y-%m-%d-%H%M%S}'.format(datetime.datetime.now())
     result_file = 'test_result-' + date_stamp + '.xlsx'
     wb = Workbook()
-    worksheet = wb.worksheets[0]
-    worksheet['A1'] = 'Test Case'
-    worksheet['B1'] = 'Status'
-    worksheet['C1'] = 'Error Detaiils'
-    worksheet['D1'] = 'Tags'
+    ws = wb.worksheets[0]
+    ws['A1'] = 'Test Case'
+    ws['B1'] = 'Status'
+    ws['C1'] = 'Error Details'
+    ws['D1'] = 'Tags'
+    ws['E1'] = 'Comments'
     for i, name, status, error, tags in izip(count(), tc_name_list, tc_status_list, tc_error_list, tc_tag_list):
-        worksheet['A' + str(i + 2)] = name
-        worksheet['B' + str(i + 2)] = status
-        worksheet['C' + str(i + 2)] = error
-        worksheet['D' + str(i + 2)] = tags
+        ws['A' + str(i + 2)] = name
+        ws['B' + str(i + 2)] = status
+        ws['C' + str(i + 2)] = error
+        ws['D' + str(i + 2)] = ', '.join(tags)
+    ws.auto_filter.ref ='A1:E1'
     wb.save(filename=result_file)
 
 def get_test_status_path(elem, tc_name_attrib):
